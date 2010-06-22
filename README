@@ -1,0 +1,7 @@
+This is ugly, but it works to play music on a local community radio station
+running Ubuntu and Rhythmbox.
+
+== Future ==
+
+ * Work with an SQLite database
+ * Integrate with Django 1.2

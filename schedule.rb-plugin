@@ -1,0 +1,9 @@
+[RB Plugin]
+Loader=python
+Module=schedule
+IAge=1
+Name=Radio Schedule Plugin
+Description=An implementation of a radio schedule.
+Authors=Neskie Manuel <neskiem@gmail.com>
+Copyright=Copyright © 2008 Neskie Manuel
+Website=http://www.rhythmbox.org/
