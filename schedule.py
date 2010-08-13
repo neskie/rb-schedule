@@ -2,7 +2,6 @@ import rb, rhythmdb
 import gtk, pygtk, gobject
 from time import localtime
 import random
-import ScheduleSlot
 import os
 from configdata import *
 
@@ -16,12 +15,11 @@ class Schedule (rb.Plugin):
         self.shell = None
 
     def activate(self, shell):
+        '''We initalize some values and start prepping shows'''
         self.shell = shell
         self.db = shell.props.db
         self.playlistayer = self.shell.get_player()
-
         gobject.timeout_add(self.timeout,self.clear_queue)
-
         self.timeout_id = gobject.timeout_add(self.timeout,self.prep_show)
 
     def deactivate(self, shell):
@@ -33,7 +31,8 @@ class Schedule (rb.Plugin):
         del self.timeout_id
 
     def prep_show(self):
-
+        '''Get the time until the top of the hour and then add songs to the
+        queue.'''
 
         t = localtime()
         min_to_hour = 60 - int(t.tm_min)
@@ -56,15 +55,20 @@ class Schedule (rb.Plugin):
         return True
 
     def add_to_queue(self,time_duration):
-        '''Gets current show and creates a list of the locations'''
-        genre = str(self.shows.get_current_show()['title'])
+        '''Gets current show and creates a list of the locations and adds them
+        to the play queue.'''
+        try:
+            genre = str(self.shows.get_current_show()['title'])
+        except:
+            genre = "Rock"
 
         qm = self.get_qm([[rhythmdb.QUERY_PROP_LIKE, rhythmdb.PROP_GENRE,
             genre]])
 
         if qm.get_duration() < time_duration*60:
-             print "you should go with rock"
-             qm = self.get_qm([[rhythmdb.QUERY_PROP_LIKE,rhythmdb.PROP_GENRE,"Rock"]])
+            '''If we have less music then an hour lets just play Rock.'''
+            print "You should go with rock"
+            qm = self.get_qm([[rhythmdb.QUERY_PROP_LIKE,rhythmdb.PROP_GENRE,"Rock"]])
 
         uri_loc = self.get_locations(qm)
      
